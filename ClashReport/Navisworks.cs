@@ -307,6 +307,7 @@ namespace ClashReport
 
                     ws.Cells["A" + rowNumber].Value = clashGroup.href;
                     ws.Cells["B" + rowNumber].Value = clashGroup.name;
+                    
                     ws.Cells["C" + rowNumber].Value = clashGroup.status.ToString();
                     if (clashGroup.comments.Count != 0)
                     {
@@ -315,6 +316,7 @@ namespace ClashReport
 
                     ws.Cells["E" + rowNumber].Value = clashGroup.createddate.date.Date.ToShortDateString();
                     ws.Cells["F" + rowNumber].Value = clashGroup.approveddate.date.Date.ToShortDateString();
+                    ws.Cells["G" + rowNumber].Value = GetPosition(clashGroup);
 
                     FileInfo image = new FileInfo(Path.Combine(reportDirectory, clashGroup.href));
 
@@ -325,6 +327,7 @@ namespace ClashReport
                         {
                             drawingsNames.Add(drawing.Name);
                         }
+
                         ExcelPicture pic;
                         if (drawingsNames.Contains(clashGroup.href))
                         {
@@ -345,6 +348,28 @@ namespace ClashReport
             }
 
             pck.Save();
+        }
+
+        private string GetPosition(clashgroup clashGroup)
+        {
+            List<string> gridLocations = new List<string>();
+
+            foreach (clashresult result in clashGroup.clashresults)
+            {
+                if (!gridLocations.Contains(result.gridlocation))
+                {
+                    gridLocations.Add(result.gridlocation);
+                }
+            }
+
+            string position = "";
+            foreach (string location in gridLocations)
+            {
+                position = position + location + ";";
+            }
+            position.TrimEnd(';');
+
+            return position;
         }
 
         private ExcelWorksheet AddWorksheet(ExcelWorkbook workbook, string name)
@@ -419,7 +444,9 @@ namespace ClashReport
             ws.Cells["D1"].Value = "Comment";
             ws.Cells["E1"].Value = "Creation Date";
             ws.Cells["F1"].Value = "Approbation Date";
-            ws.Cells["A1:F1"].Style.Font.Bold = true;
+            ws.Cells["G1"].Value = "Grid Location";
+            ws.Cells["H1"].Value = "Level";
+            ws.Cells["A1:H1"].Style.Font.Bold = true;
         }
 
         [System.Xml.Serialization.XmlIgnore]
@@ -2882,6 +2909,8 @@ namespace ClashReport
 
         private string approvedbyField;
 
+        private string gridlocationField;
+
         private List<comment> commentsField;
 
         private List<clashobject> clashobjectsField;
@@ -2958,6 +2987,19 @@ namespace ClashReport
         }
 
         [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified, Order = 3)]
+        public string gridlocation
+        {
+            get
+            {
+                return this.gridlocationField;
+            }
+            set
+            {
+                this.gridlocationField = value;
+            }
+        }
+
+        [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified, Order = 4)]
         public dateType approveddate
         {
             get
@@ -2970,7 +3012,7 @@ namespace ClashReport
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute(Order = 4)]
+        [System.Xml.Serialization.XmlElementAttribute(Order = 5)]
         public dateType createddate
         {
             get
@@ -2983,7 +3025,7 @@ namespace ClashReport
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified, Order = 5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified, Order = 6)]
         public string approvedby
         {
             get
@@ -2996,7 +3038,7 @@ namespace ClashReport
             }
         }
 
-        [System.Xml.Serialization.XmlArrayAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified, Order = 6)]
+        [System.Xml.Serialization.XmlArrayAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified, Order = 7)]
         [System.Xml.Serialization.XmlArrayItemAttribute("comment", IsNullable = false)]
         public List<comment> comments
         {
@@ -3010,7 +3052,7 @@ namespace ClashReport
             }
         }
 
-        [System.Xml.Serialization.XmlArrayAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified, Order = 7)]
+        [System.Xml.Serialization.XmlArrayAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified, Order = 8)]
         [System.Xml.Serialization.XmlArrayItemAttribute("clashobject", IsNullable = false)]
         public List<clashobject> clashobjects
         {
@@ -3024,7 +3066,7 @@ namespace ClashReport
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified, Order = 8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified, Order = 9)]
         public clashgroupClashtasklink clashtasklink
         {
             get
@@ -3037,7 +3079,7 @@ namespace ClashReport
             }
         }
 
-        [System.Xml.Serialization.XmlArrayAttribute(Order = 9)]
+        [System.Xml.Serialization.XmlArrayAttribute(Order = 10)]
         [System.Xml.Serialization.XmlArrayItemAttribute("clashgroup", typeof(clashgroup), IsNullable = false)]
         [System.Xml.Serialization.XmlArrayItemAttribute("clashresult", typeof(clashresult), IsNullable = false)]
         public List<object> clashresults
