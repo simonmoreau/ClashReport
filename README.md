@@ -3,11 +3,13 @@
   Clash Report
 </h1>
 
-<h4 align="center">An application to create reports from Navisworks Html clash reports</h4>
+<h4 align="center">An application to create Excel reports from Navisworks Html clash reports</h4>
+
+<p align="center"><img width=80% src="https://raw.githubusercontent.com/simonmoreau/ClashReport/master/Pictures/NavisworksReport.jpg"></p>
 
 # Overview
 
-With Clash Report, you can convert a series of HTML Navisworks Clash reports into a combined CSV file. Use it to follow the resolution of your clashes.
+With Clash Report, you can convert a series of HTML Navisworks Clash reports into a combined Excel spreadsheet.
 
 [More informations can be found here](https://www.bim42.com/2015/05/log-spatial-coordination).
 
