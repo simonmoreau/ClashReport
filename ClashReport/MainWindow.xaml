@@ -42,7 +42,7 @@
         </GroupBox>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
             <Button Content="Save As" Click="SaveClick" Width="75"/>
-            <Button Content="Exit" IsCancel="True" Width="75" Margin="6,0,0,0"/>
+            <Button Content="Exit" IsCancel="True" Width="75" Margin="6,0,0,0" Click="CloseButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
